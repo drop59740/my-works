@@ -1,0 +1,340 @@
+/* ============================================================
+   SvyDev — portfolio SPA
+   Custom layer on top of Tailwind
+   ============================================================ */
+
+:root {
+  --ease: cubic-bezier(.22, 1, .36, 1);
+  --ease-soft: cubic-bezier(.4, 0, .2, 1);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'Manrope', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: #d8b48c;
+  color: #1a110b;
+}
+
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #0b0b0d; }
+::-webkit-scrollbar-thumb {
+  background: #2f2f34;
+  border-radius: 999px;
+  border: 2px solid #0b0b0d;
+}
+::-webkit-scrollbar-thumb:hover { background: #45454c; }
+
+/* Film grain */
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.86' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+}
+
+/* ============================================================
+   View routing transitions
+   ============================================================ */
+.view {
+  position: relative;
+  min-height: 100svh;
+  overflow-x: clip;
+}
+
+.view-leaving {
+  opacity: 0;
+  transform: translateY(-14px) scale(.994);
+  filter: blur(5px);
+  transition: opacity .26s var(--ease-soft), transform .28s var(--ease-soft), filter .28s var(--ease-soft);
+  pointer-events: none;
+}
+
+.view-entering {
+  animation: viewIn .72s var(--ease) both;
+}
+
+@keyframes viewIn {
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(.997);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+/* ============================================================
+   Scroll reveal
+   ============================================================ */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity .9s var(--ease),
+    transform .9s var(--ease);
+  transition-delay: var(--d, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============================================================
+   Marquee
+   ============================================================ */
+.marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 34s linear infinite;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-slow .marquee-track {
+  animation-duration: 58s;
+}
+
+@keyframes marquee {
+  to { transform: translateX(-50%); }
+}
+
+/* ============================================================
+   Card image zoom
+   ============================================================ */
+.card-img {
+  transition: transform 1.25s var(--ease), filter .8s ease;
+}
+
+.group:hover .card-img,
+.group:focus-visible .card-img {
+  transform: scale(1.055);
+}
+
+/* ============================================================
+   Hero accent
+   ============================================================ */
+.hero-accent {
+  background-image: linear-gradient(105deg, #f6ddc0 0%, #d8b48c 48%, #a97848 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ============================================================
+   Reduced motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal { opacity: 1; transform: none; }
+}
+
+/* ============================================================
+   Modals
+   ============================================================ */
+.modal {
+  opacity: 0;
+  transition: opacity .25s ease;
+}
+
+.modal.is-open {
+  opacity: 1;
+}
+
+.modal .modal-backdrop {
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+
+.modal.is-open .modal-backdrop {
+  opacity: 1;
+}
+
+.modal .modal-panel {
+  max-height: 92vh;
+  max-height: 92dvh;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  opacity: 0;
+  transform: translateY(22px) scale(.97);
+  transition: opacity .3s ease, transform .38s var(--ease);
+}
+
+.modal.is-open .modal-panel {
+  opacity: 1;
+  transform: none;
+}
+
+/* ============================================================
+   Forms
+   ============================================================ */
+.field {
+  width: 100%;
+  border-radius: .85rem;
+  border: 1px solid rgba(0, 0, 0, .13);
+  background: #fff;
+  padding: .78rem 1rem;
+  font-size: .875rem;
+  line-height: 1.45;
+  color: inherit;
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.field::placeholder { color: rgba(0, 0, 0, .32); }
+
+select.field {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.4rem;
+}
+
+.theme-coffee .field:focus {
+  outline: none;
+  border-color: #a9683c;
+  box-shadow: 0 0 0 4px rgba(169, 104, 60, .13);
+}
+
+.theme-tutor .field:focus {
+  outline: none;
+  border-color: #1d4ed8;
+  box-shadow: 0 0 0 4px rgba(29, 78, 216, .12);
+}
+
+.theme-barber .field {
+  background-color: #101010;
+  border-color: rgba(255, 255, 255, .16);
+  color: #f2f0ec;
+}
+
+.theme-barber .field::placeholder { color: rgba(255, 255, 255, .28); }
+
+.theme-barber select.field {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+.theme-barber .field:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, .6);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, .09);
+}
+
+input[type="date"].field { color-scheme: light; }
+.theme-barber input[type="date"].field { color-scheme: dark; }
+
+/* iOS Safari zooms the page when a form control is focused below 16px. */
+@media (max-width: 640px) {
+  .field {
+    font-size: 1rem;
+  }
+
+  .modal .modal-panel {
+    max-height: 94dvh;
+  }
+}
+
+/* ============================================================
+   Decorative
+   ============================================================ */
+.map-grid {
+  background-image:
+    linear-gradient(rgba(247, 241, 231, .09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(247, 241, 231, .09) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.grid-bg {
+  background-image:
+    linear-gradient(to right, rgba(11, 28, 61, .065) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(11, 28, 61, .065) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse at 64% 38%, #000 12%, transparent 76%);
+  mask-image: radial-gradient(ellipse at 64% 38%, #000 12%, transparent 76%);
+}
+
+.pulse-ring {
+  animation: pulseRing 2.8s ease-out infinite;
+}
+
+@keyframes pulseRing {
+  0%   { transform: scale(.45); opacity: .85; }
+  70%  { transform: scale(2.1); opacity: 0; }
+  100% { opacity: 0; }
+}
+
+.check-pop {
+  animation: checkPop .55s var(--ease) both;
+}
+
+@keyframes checkPop {
+  from { transform: scale(.55); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+.vertical-rl { writing-mode: vertical-rl; }
+
+.link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  transition: background-size .4s var(--ease);
+}
+
+.link-underline:hover { background-size: 100% 1px; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+/* Soft entrance for the success check */
+.success-inner { animation: successIn .6s var(--ease) both; }
+@keyframes successIn {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ============================================================
+   Reduced motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal { opacity: 1; transform: none; }
+  .marquee-track { animation: none; }
+}
